@@ -16,4 +16,4 @@ If you are familiar with cargo or the rust toolchain then you can simply clone t
 
 https://zwbetz.com/how-to-add-a-binary-to-your-path-on-macos-linux-windows/
 
-The executable is localed in ```src/target/debug/breaktime```
+The executable is located in ```src/target/debug/breaktime```
