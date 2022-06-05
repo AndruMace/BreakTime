@@ -54,7 +54,7 @@ fn initialize() {
         filestring.push_str(&fmt_str)
     }
 
-    match fs::write(&path, filestring) {
+    match fs::write(path, filestring) {
         Ok(_) => (),
         Err(err) => panic!("{}", err),
     }
@@ -62,7 +62,7 @@ fn initialize() {
 
 fn open_url() {
     let url = get_url();
-    open::that(url).expect("Error opening url")
+    open::that(url).expect("Error opening url");
 }
 
 fn add_url(url: &str) {
@@ -82,16 +82,20 @@ fn add_url(url: &str) {
 
 fn get_url() -> String {
     let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
-    let project_data_dir = project_dirs.data_dir().display();
-    let filepath = format!("{}/{}", project_data_dir, "urls.txt");
+    let mut path = PathBuf::from(project_dirs.data_dir());
+    path.push("urls.txt");
 
-    let file_str = fs::read_to_string(filepath).expect("Error reading file");
+    let file_str = fs::read_to_string(path).expect("Error reading file");
     let urls: Vec<&str> = file_str.split("\n").collect();
 
     let mut rng = rand::thread_rng();
-    let rand_index = rng.gen_range(0..urls.len());
 
-    return urls[rand_index].to_owned()
+    println!("!!! {} !!!", urls.len());
+    
+    return match urls.len() {
+        0 | 1 => String::from("https://github.com/AndruMace/BreakTime"),
+        _ => urls[rng.gen_range(1..urls.len())].to_owned()
+    }
 }
 
 fn clear() {
@@ -99,7 +103,7 @@ fn clear() {
     let project_data_dir = project_dirs.data_dir().display();
     let filepath = format!("{}/{}", project_data_dir, "urls.txt");
 
-    fs::write(filepath, "").expect("Error clearing file");
+    fs::File::create(filepath).expect("Error clearing file");
     println!("urls.txt has been cleared! Start adding back your own urls.")
 }
 
@@ -109,5 +113,5 @@ fn list() {
     let filepath = format!("{}/{}", project_data_dir, "urls.txt");
 
     let file_str = fs::read_to_string(filepath).expect("Error reading file");
-    println!("{}", file_str);
+    println!("\n{}", file_str);
 }
