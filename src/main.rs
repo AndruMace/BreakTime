@@ -2,20 +2,25 @@
 use std::env;
 use rand::Rng;
 use std::fs;
-use std::path::Path;
+use std::path::{PathBuf};
 use open;
+use directories_next::ProjectDirs;
+
 
 fn main() {
+    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
+    let mut project_data_dir = PathBuf::from(project_dirs.data_dir());
+    project_data_dir.push("urls.txt");
 
-    match Path::new("urls.txt").try_exists() {
-        Ok(exists) => match exists {
+
+    match fs::try_exists(project_data_dir){
+        Ok(v) => match v {
             true => (),
             false => initialize()
         },
-        Err(err) => panic!("{}", err) 
+        Err(e) => panic!("{}",e)
     }
 
-    // let args: Vec<&str> = env::args().collect().iter().map(|a| a.as_str()).collect();
     let args: Vec<String> = env::args().collect();
     let args: Vec<&str> = args.iter().map(|a| a.as_str()).collect();
 
@@ -29,6 +34,12 @@ fn main() {
 }
 
 fn initialize() {
+    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
+    let mut path = PathBuf::from(project_dirs.data_dir());
+
+    fs::create_dir_all(&path).expect("Error initializing");
+    path.push("urls.txt");
+    
     let defaults: [&'static str; 4] = [
         "https://www.reddit.com", 
         "https://news.ycombinator.com/", 
@@ -43,7 +54,7 @@ fn initialize() {
         filestring.push_str(&fmt_str)
     }
 
-    match fs::write("urls.txt", filestring) {
+    match fs::write(&path, filestring) {
         Ok(_) => (),
         Err(err) => panic!("{}", err),
     }
@@ -55,18 +66,26 @@ fn open_url() {
 }
 
 fn add_url(url: &str) {
-    let mut file_str = fs::read_to_string("urls.txt").expect("Error reading file");
+    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
+    let project_data_dir = project_dirs.data_dir().display();
+    let filepath = format!("{}/{}", project_data_dir, "urls.txt");
+
+    let mut file_str = fs::read_to_string(&filepath).expect("Error reading file");
     let formatted_addendum = format!("\n{}", url);
     file_str.push_str(&formatted_addendum);
 
-    fs::write("urls.txt", file_str).expect("Error writing to file");
+    fs::write(&filepath, file_str).expect("Error writing to file");
 
-    file_str = fs::read_to_string("urls.txt").expect("Error reading file");
+    file_str = fs::read_to_string(&filepath).expect("Error reading file");
     println!("New file is: {}", file_str)
 }
 
 fn get_url() -> String {
-    let file_str = fs::read_to_string("urls.txt").expect("Error reading file");
+    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
+    let project_data_dir = project_dirs.data_dir().display();
+    let filepath = format!("{}/{}", project_data_dir, "urls.txt");
+
+    let file_str = fs::read_to_string(filepath).expect("Error reading file");
     let urls: Vec<&str> = file_str.split("\n").collect();
 
     let mut rng = rand::thread_rng();
@@ -76,11 +95,19 @@ fn get_url() -> String {
 }
 
 fn clear() {
-    fs::write("urls.txt", "").expect("Error clearing file");
+    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
+    let project_data_dir = project_dirs.data_dir().display();
+    let filepath = format!("{}/{}", project_data_dir, "urls.txt");
+
+    fs::write(filepath, "").expect("Error clearing file");
     println!("urls.txt has been cleared! Start adding back your own urls.")
 }
 
 fn list() {
-    let file_str = fs::read_to_string("urls.txt").expect("Error reading file");
+    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
+    let project_data_dir = project_dirs.data_dir().display();
+    let filepath = format!("{}/{}", project_data_dir, "urls.txt");
+
+    let file_str = fs::read_to_string(filepath).expect("Error reading file");
     println!("{}", file_str);
 }
