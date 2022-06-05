@@ -2,16 +2,12 @@
 use std::env;
 use rand::Rng;
 use std::fs;
-use std::path::{PathBuf};
+use std::path::PathBuf;
 use open;
 use directories_next::ProjectDirs;
 
-
 fn main() {
-    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
-    let mut project_data_dir = PathBuf::from(project_dirs.data_dir());
-    project_data_dir.push("urls.txt");
-
+    let project_data_dir = get_path();
 
     match fs::try_exists(project_data_dir){
         Ok(v) => match v {
@@ -34,7 +30,7 @@ fn main() {
 }
 
 fn initialize() {
-    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
+    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Error initializing");
     let mut path = PathBuf::from(project_dirs.data_dir());
 
     fs::create_dir_all(&path).expect("Error initializing");
@@ -66,9 +62,7 @@ fn open_url() {
 }
 
 fn add_url(url: &str) {
-    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
-    let project_data_dir = project_dirs.data_dir().display();
-    let filepath = format!("{}/{}", project_data_dir, "urls.txt");
+    let filepath = get_path();
 
     let mut file_str = fs::read_to_string(&filepath).expect("Error reading file");
     let formatted_addendum = format!("\n{}", url);
@@ -81,11 +75,9 @@ fn add_url(url: &str) {
 }
 
 fn get_url() -> String {
-    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
-    let mut path = PathBuf::from(project_dirs.data_dir());
-    path.push("urls.txt");
+    let filepath = get_path();
 
-    let file_str = fs::read_to_string(path).expect("Error reading file");
+    let file_str = fs::read_to_string(filepath).expect("Error reading file");
     let urls: Vec<&str> = file_str.split("\n").collect();
 
     let mut rng = rand::thread_rng();
@@ -99,19 +91,19 @@ fn get_url() -> String {
 }
 
 fn clear() {
-    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
-    let project_data_dir = project_dirs.data_dir().display();
-    let filepath = format!("{}/{}", project_data_dir, "urls.txt");
+    let filepath = get_path();
 
     fs::File::create(filepath).expect("Error clearing file");
     println!("urls.txt has been cleared! Start adding back your own urls.")
 }
 
 fn list() {
-    let project_dirs = ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("Some error!");
-    let project_data_dir = project_dirs.data_dir().display();
-    let filepath = format!("{}/{}", project_data_dir, "urls.txt");
+    let filepath = get_path();
 
     let file_str = fs::read_to_string(filepath).expect("Error reading file");
     println!("\n{}", file_str);
+}
+
+fn get_path() -> PathBuf {
+    return ProjectDirs::from("ind", "Andru Mace", "breaktime").expect("could not retrieve home directory from OS").data_dir().join("urls.txt");
 }
