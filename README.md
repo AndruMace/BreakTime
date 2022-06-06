@@ -1,6 +1,6 @@
 # Break Time!
 
-Break time is a CLI application that helps you keep track of and visit your favorite digital destinations. By default it creates a file with links to reddit, hackernews, youtube, and the rust programming language website. Feel free to add to those or clear them and start anew with the below commands. 
+Break time is a CLI application that helps you keep track of and visit your favorite digital destinations. Next time you want to take a break and are looking for a bit of variance, run ```breaktime``` to go to one of your favorite websites. By default it creates a file with links to reddit, hackernews, youtube, and the rust programming language website. Feel free to add to those or clear them and start anew with the below commands. 
 
 
 ### Commands
@@ -21,4 +21,4 @@ If you are familiar with cargo or the rust toolchain then you can simply clone t
 
 https://zwbetz.com/how-to-add-a-binary-to-your-path-on-macos-linux-windows/
 
-The executable is located in ```src/target/release/breaktime```
+The executable is located in ```src/target/debug/breaktime```
