@@ -9,7 +9,7 @@ use directories_next::ProjectDirs;
 fn main() {
     let project_data_dir = get_path();
 
-    match fs::try_exists(project_data_dir){
+    match fs::try_exists(project_data_dir) {
         Ok(v) => match v {
             true => (),
             false => initialize()
@@ -24,6 +24,7 @@ fn main() {
         ["clear"] => clear(),
         ["list"] => list(),
         ["add", url] => add_url(url),
+        ["rm"] => remove(),
         [] => open_url(), 
         _ => println!("Unexpected input")
     };
@@ -70,8 +71,7 @@ fn add_url(url: &str) {
 
     fs::write(&filepath, file_str).expect("Error writing to file");
 
-    file_str = fs::read_to_string(&filepath).expect("Error reading file");
-    println!("New file is: {}", file_str)
+    println!("Successfully added {}", url);
 }
 
 fn get_url() -> String {
@@ -81,8 +81,6 @@ fn get_url() -> String {
     let urls: Vec<&str> = file_str.split("\n").collect();
 
     let mut rng = rand::thread_rng();
-
-    println!("!!! {} !!!", urls.len());
     
     return match urls.len() {
         0 | 1 => String::from("https://github.com/AndruMace/BreakTime"),
@@ -102,6 +100,16 @@ fn list() {
 
     let file_str = fs::read_to_string(filepath).expect("Error reading file");
     println!("\n{}", file_str);
+}
+
+fn remove() {
+    let filepath = get_path();
+    let mut file_str = fs::read_to_string(&filepath).expect("Error reading file");
+    let mut urls: Vec<&str> = file_str.split("\n").collect();
+    urls.pop();
+
+    file_str = urls.join("\n");
+    fs::write(&filepath, file_str).expect("Error removing last url");
 }
 
 fn get_path() -> PathBuf {

@@ -8,6 +8,7 @@ Break time is a CLI application that helps you keep track of and visit your favo
 - ```breaktime``` selects random url from your collection and opens it in browser 
 - ```breaktime add <url>``` adds a url to your collection (must be FULL url)
 - ```breaktime list``` lists your url collection
+- ```breaktime rm``` removes the most recently added url.
 - ```breaktime clear``` clears your url collection so you can start from scratch.
 
 ### Instructions
