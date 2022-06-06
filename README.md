@@ -6,6 +6,7 @@ Break time is a CLI application that helps you keep track of and visit your favo
 ### Commands
 
 - ```breaktime``` selects random url from your collection and opens it in browser 
+- ```breaktime length``` randomly generates how long your break will be, between 10-30 minutes. 
 - ```breaktime add <url>``` adds a url to your collection (must be FULL url)
 - ```breaktime list``` lists your url collection
 - ```breaktime rm``` removes the most recently added url.

@@ -25,6 +25,7 @@ fn main() {
         ["list"] => list(),
         ["add", url] => add_url(url),
         ["rm"] => remove(),
+        ["length"] => how_long(),
         [] => open_url(), 
         _ => println!("Unexpected input")
     };
@@ -110,6 +111,12 @@ fn remove() {
 
     file_str = urls.join("\n");
     fs::write(&filepath, file_str).expect("Error removing last url");
+}
+
+fn how_long() {
+    // let mut rng = rand::thread_rng();
+    let r_int = rand::thread_rng().gen_range(10..30);
+    println!("{}",r_int.to_string());
 }
 
 fn get_path() -> PathBuf {
